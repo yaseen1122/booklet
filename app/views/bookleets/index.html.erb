@@ -1,0 +1,51 @@
+<h1 class="text-center">Booklet Generator</h1>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+  <div class="row flex-lg-nowrap">
+    <div class="col">
+      <div class="row flex-lg-nowrap">
+        <div class="col mb-3">
+          <div class="e-panel card">
+            <div class="card-body">
+              <div class="card-title text-center">
+                <h6 class="mr-2"><span>CREATE NEW OR UPDATE EXISTING BOOKLET</span></h6>
+              </div>
+              <button type="button" class="btn btn-outline-success pull-right mb-3"  data-toggle="modal" data-target="#user-form-modal">Add Booklet</button>
+              <div class="e-table">
+                <div class="table-responsive table-lg mt-3">
+                  <p id="notice"><%= notice %></p>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th class="max-width">Name</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @bookleets.each do |bookleet| %>
+                        <tr>
+                          <td class="text-nowrap align-middle"><%= bookleet.name %></td>
+                          <td >
+                            <div class="btn-group align-top">
+                              <%= link_to 'Edit',edit_bookleet_path(bookleet), class: "btn btn-lg btn-outline-primary badge"%>
+                              <%= link_to bookleet, method: :delete, data: { confirm: 'Are you sure?'} , class: "btn btn-lg btn-outline-danger badge" do %>
+                                <i class="fa fa-trash"></i>
+                              <% end %>
+
+
+                            </div>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%= render partial: "new_booklet_form"%>
+    </div>
+  </div>
+</div>
