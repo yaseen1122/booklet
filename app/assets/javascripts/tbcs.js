@@ -12,7 +12,7 @@ $(document).ready(function(){
   //   }
   // });
 
-  $("#add-tbc-btn").on("click",function(){
+  $(" body #add-tbc-btn").on("click",function(){
     $("#new-tbc-form-modal").modal("show");
     $("#new-tbc-form")[0].reset();
   })
