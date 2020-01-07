@@ -80,7 +80,7 @@
                   <th>File Type</th>
                 </tr>
               </thead>
-              <tbody class="booklet_tbcs_section">
+              <tbody class="">
               	<% booklet_files = Dir.glob("#{Rails.root}/booklet_files/**/*")%>
               	<% if booklet_files.any? %>
               		<%  booklet_files.each do |bf| %>
