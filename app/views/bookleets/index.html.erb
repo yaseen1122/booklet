@@ -1,6 +1,5 @@
-<h1 class="text-center">Booklet Generator</h1>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container">
+<div class="container mt-5">
   <div class="row flex-lg-nowrap">
     <div class="col">
       <div class="row flex-lg-nowrap">
@@ -10,10 +9,10 @@
               <div class="card-title text-center">
                 <h6 class="mr-2"><span>CREATE NEW OR UPDATE EXISTING BOOKLET</span></h6>
               </div>
-              <button type="button" class="btn btn-outline-success pull-right mb-3"  data-toggle="modal" data-target="#user-form-modal">Add Booklet</button>
+              <button type="button" class="btn btn-outline-success pull-right mb-3"  data-toggle="modal" data-target="#booklet-new-form-modal">Add Booklet</button>
               <div class="e-table">
                 <div class="table-responsive table-lg mt-3">
-                  <p id="notice"><%= notice %></p>
+                  <!-- <p id="notice"><%#= notice %></p> -->
                   <table class="table table-bordered">
                     <thead>
                       <tr>
@@ -22,19 +21,24 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% @bookleets.each do |bookleet| %>
+                      <% if @bookleets.any? %>
+                        <% @bookleets.each do |bookleet| %>
+                          <tr>
+                            <td class="text-nowrap align-middle"><%= bookleet.name %></td>
+                            <td >
+                              <div class="btn-group align-top">
+                                <%= link_to 'Edit',edit_bookleet_path(bookleet), class: "btn btn-lg btn-outline-primary badge"%>
+                                <%= link_to bookleet, method: :delete, data: { confirm: 'Are you sure?'} , class: "btn btn-lg btn-outline-danger badge" do %>
+                                  <i class="fa fa-trash"></i>
+                                <% end %>
+                              </div>
+                            </td>
+                          </tr>
+                        <% end %>
+                      <% else %>
                         <tr>
-                          <td class="text-nowrap align-middle"><%= bookleet.name %></td>
-                          <td >
-                            <div class="btn-group align-top">
-                              <%= link_to 'Edit',edit_bookleet_path(bookleet), class: "btn btn-lg btn-outline-primary badge"%>
-                              <%= link_to bookleet, method: :delete, data: { confirm: 'Are you sure?'} , class: "btn btn-lg btn-outline-danger badge" do %>
-                                <i class="fa fa-trash"></i>
-                              <% end %>
-
-
-                            </div>
-                          </td>
+                          <td class="text-nowrap align-middle">No Result(s) Found</td>
+                          <td></td>
                         </tr>
                       <% end %>
                     </tbody>

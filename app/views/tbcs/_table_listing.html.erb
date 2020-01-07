@@ -1,0 +1,30 @@
+<% if tbcs.any? %>
+  <% tbcs.each do |tbc| %>
+    <tr>
+      <td class="align-middle">
+        <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
+          <input type="checkbox" class="custom-control-input" id="item-12">
+          <label class="custom-control-label" for="item-12"></label>
+        </div>
+      </td>
+      <td class="text-nowrap align-middle"><%= tbc.name%></td>
+      <td class="text-center align-middle">
+        <div class="btn-group align-top">
+            <!-- <button class="btn btn-sm btn-outline-primary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button> -->
+            <%= link_to 'Edit', edit_bookleet_tbc_path(tbc.bookleet,tbc), class: "btn btn-sm btn-outline-primary ", remote: true%>
+            <%= link_to bookleet_tbc_path(tbc.bookleet,tbc), method: :delete, data: { confirm: 'Are you sure?'} , class: "btn btn-sm btn-outline-danger", remote: true do %>
+              <i class="fa fa-trash"></i>
+            <% end %>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+  <div id="update-tbc-section-form"></div>
+<% else %>
+   <tr>
+    <td class="align-middle"></td>
+    <td class="text-nowrap align-middle">No Result(s) Found</td>
+    <td class="text-center align-middle">
+    </td>
+  </tr>
+<% end %>

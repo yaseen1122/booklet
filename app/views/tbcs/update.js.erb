@@ -1,0 +1,4 @@
+<% if @tbc.errors.blank?%>
+ $("#update-tbc-form-modal").modal("hide")
+ $(".booklet_tbcs_section").html("<%= j render partial:'tbcs/table_listing', locals: {tbcs: @booklet.tbcs}%>")
+<% end%>

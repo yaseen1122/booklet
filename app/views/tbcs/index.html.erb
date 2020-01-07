@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tbcs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tbcs.each do |tbc| %>
+      <tr>
+        <td><%= tbc.name %></td>
+        <td><%= link_to 'Show', tbc %></td>
+        <td><%= link_to 'Edit', edit_tbc_path(tbc) %></td>
+        <td><%= link_to 'Destroy', tbc, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Tbc', new_tbc_path %>

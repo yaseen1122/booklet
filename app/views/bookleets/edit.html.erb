@@ -1,6 +1,120 @@
-<h1>Editing Bookleet</h1>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div  class="text-center mb-5"></div>
+<%#= render 'form', bookleet: @bookleet %>
+<%#= link_to 'Show', @bookleet %> 
+<%#= link_to 'Back', bookleets_path %>
+<div class="container">
+  <div class="row flex-lg-nowrap">
+  	<div class="col-md-4 grove-border">
+          <div class="card-body">
+            <div class="card-title">
+              <h6 class="mr-2"><span>Table of Contents for Booklet</span></h6>
+              <button id="add-tbc-btn" class="btn btn-sm btn-outline-success pull-right mb-3" type="button"><i class="fa fa-plus"></i></button>
+            </div>
+            <div class="e-table">
+              <div class="table-responsive table-lg mt-3">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="align-top">
+                      </th>
+                      <th class="max-width">Name</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="booklet_tbcs_section">
+                    <%= render partial:'tbcs/table_listing', locals: {tbcs: @bookleet.tbcs}%>
+                  </tbody>
+                </table>
+              </div>
+             
+            </div>
+          </div>
+      </div>
+     <div class="col-md-8 grove-border">
+				<div class="card-body mt-5">
+	        <div class="e-table mt-2">
+	          <div class="table-responsive table-lg mt-3">
+	            <table class="table table-bordered">
+	              <thead>
+	                <tr>
+	                  <th class="max-width">File Name on Case</th>
+	                  <th>Description in Booklet</th>
+	                </tr>
+	              </thead>
+	              <tbody class="booklet_tbcs_section">
+	                <tr>
+							      <td class="text-nowrap align-middle">Dummy Text</td>
+							      <td class="text-center align-middle">Dummy Text</td>
+							    </tr>
+									  
+	              </tbody>
+	            </table>
+	          </div>
+	        </div>
+	      </div>
+      </div>
+  	</div>
+  </div>
+</div>
 
-<%= render 'form', bookleet: @bookleet %>
-
-<%= link_to 'Show', @bookleet %> |
-<%= link_to 'Back', bookleets_path %>
+<div class="container mb-5">
+	<div class="row ">
+		<div class="col-md-10 grove-border">
+			<div class="card-body">
+        <div class="card-title">
+          <h6 class="mr-2"><span>List of Files in the Folder -- '/booklet_files'</span></h6>
+        </div>
+        <div class="e-table">
+          <div class="table-responsive table-lg mt-3">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="align-top">
+                  	<div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
+						          <input type="checkbox" class="custom-control-input" id="checkall">
+						          <label class="custom-control-label" for="item-12"></label>
+						        </div>
+                  </th>
+                  <th class="max-width">File Name</th>
+                  <th>File Type</th>
+                </tr>
+              </thead>
+              <tbody class="booklet_tbcs_section">
+              	<% booklet_files = Dir.glob("#{Rails.root}/booklet_files/**/*")%>
+              	<% if booklet_files.any? %>
+              		<%  booklet_files.each do |bf| %>
+              			<% full_file_name = bf.split('/').last %>
+              			<% file_name = full_file_name.split('.').first%>
+              			<% ext_name  = full_file_name.split('.').last%>
+		                <tr>
+								      <td class="align-middle">
+								        <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
+								          <input type="checkbox" class="custom-control-input" id="item-12">
+								          <label class="custom-control-label" for="item-12"></label>
+								        </div>
+								      </td>
+								      <td class="text-nowrap align-middle"><%= file_name%></td>
+								      <td class="text-center align-middle"><%= ext_name %></td>
+								    </tr>
+								  <% end %>
+							  <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+		</div>
+		<div class="col-md-2 grove-border ">
+			<button type="button" class="btn btn-primary btn-block mb-3 mt-2">Put Into Booklet</button>
+			<button type="button" class="btn btn-success btn-block mb-3">Generate Booklet</button>
+			<button type="button" class="btn btn-secondary btn-block ">Exit</button>
+		</div>
+	</div>
+</div>
+<%= render partial: "tbcs/new_modal_form", locals: {booklet: @bookleet}%>
+<style type="text/css">
+	.grove-border {
+		border-style: groove;
+	}
+</style>

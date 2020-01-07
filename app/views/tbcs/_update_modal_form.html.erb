@@ -1,0 +1,49 @@
+<div class="modal fade" role="dialog" tabindex="-1"  id="update-tbc-form-modal" aria-hidden="true">
+  <div class="modal-dialog modal-md" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center">Update Table of Content</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-1">
+          <%= form_with(model: [booklet, tbc], local: false, class: "form") do |form|  %>
+            <div class="row">
+              <% if tbc.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(tbc.errors.count, "error") %> prohibited this tbc from being saved:</h2>
+
+                  <ul>
+                  <% tbc.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                  </ul>
+                </div>
+              <% end %>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <%= form.label :name %>
+                      <%= form.text_field :name,class: "form-control", required:true %>
+                    </div>
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col d-flex justify-content-end">
+                <button class="btn btn-success" type="submit">Save</button>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
