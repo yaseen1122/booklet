@@ -13,7 +13,7 @@
             </div>
             <div class="e-table">
               <div class="table-responsive table-lg mt-3">
-                <table class="table table-bordered">
+                <table class="table table-bordered tbc-selection-list-tb">
                   <thead>
                     <tr>
                       <th class="align-top">
@@ -35,21 +35,20 @@
 				<div class="card-body mt-5">
 	        <div class="e-table mt-2">
 	          <div class="table-responsive table-lg mt-3">
-	            <table class="table table-bordered">
-	              <thead>
-	                <tr>
-	                  <th class="max-width">File Name on Case</th>
-	                  <th>Description in Booklet</th>
-	                </tr>
-	              </thead>
-	              <tbody class="">
-	                <tr>
-							      <td class="text-nowrap align-middle">Dummy Text</td>
-							      <td class="text-center align-middle">Dummy Text</td>
-							    </tr>
-									  
-	              </tbody>
-	            </table>
+              <% @bookleet.tbcs.each do |bf|%>
+  	            <table class=" hide-table table table-bordered tbc-booklrt-tables" id="tbc-<%= bf.id%>-booklet-table">
+  	              <thead>
+  	                <tr>
+  	                  <th class="max-width">File Name on Case</th>
+  	                  <th>Description in Booklet</th>
+  	                </tr>
+  	              </thead>
+  	              <tbody  id="tbc-<%= bf.id%>-booklet-files">
+  	                <tr >
+  							    </tr>
+  	              </tbody>
+  	            </table>
+              <% end %>
 	          </div>
 	        </div>
 	      </div>
@@ -67,7 +66,7 @@
         </div>
         <div class="e-table">
           <div class="table-responsive table-lg mt-3">
-            <table class="table table-bordered">
+            <table class="table table-bordered tbc-selected-files-tb">
               <thead>
                 <tr>
                   <th class="align-top">
@@ -83,19 +82,19 @@
               <tbody class="">
               	<% booklet_files = Dir.glob("#{Rails.root}/booklet_files/**/*")%>
               	<% if booklet_files.any? %>
-              		<%  booklet_files.each do |bf| %>
+              		<%  booklet_files.each_with_index do |bf,index| %>
               			<% full_file_name = bf.split('/').last %>
               			<% file_name = full_file_name.split('.').first%>
               			<% ext_name  = full_file_name.split('.').last%>
 		                <tr>
 								      <td class="align-middle">
 								        <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-								          <input type="checkbox" class="custom-control-input" id="item-12">
-								          <label class="custom-control-label" for="item-12"></label>
+								          <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= index%>">
+								          <label class="custom-control-label" for="bf-<%= index%>"></label>
 								        </div>
 								      </td>
 								      <td class="text-nowrap align-middle"><%= file_name%></td>
-								      <td class="text-center align-middle"><%= ext_name %></td>
+								      <td class="text-center align-middle"><%= "."+ext_name %></td>
 								    </tr>
 								  <% end %>
 							  <% end %>
@@ -106,7 +105,7 @@
       </div>
 		</div>
 		<div class="col-md-2 grove-border ">
-			<button type="button" class="btn btn-primary btn-block mb-3 mt-2">Put Into Booklet</button>
+			<button type="button" class="btn btn-primary btn-block mb-3 mt-2" data-current-selected-tbc-table="" id="place-booklet-fl-btn">Put Into Booklet</button>
 			<button type="button" class="btn btn-success btn-block mb-3">Generate Booklet</button>
 			<button type="button" class="btn btn-secondary btn-block ">Exit</button>
 		</div>
@@ -114,7 +113,5 @@
 </div>
 <%= render partial: "tbcs/new_modal_form", locals: {booklet: @bookleet}%>
 <style type="text/css">
-	.grove-border {
-		border-style: groove;
-	}
+
 </style>
