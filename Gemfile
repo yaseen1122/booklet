@@ -22,8 +22,8 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-# gem 'combine_pdf', '~> 0.2.11'
-# gem 'cloudmersive-convert-api-client', '~> 1.3.3'
+gem 'combine_pdf', '~> 0.2.11'
+gem 'cloudmersive-convert-api-client', '~> 1.3.3'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
