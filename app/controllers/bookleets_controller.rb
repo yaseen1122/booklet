@@ -63,6 +63,12 @@ class BookleetsController < ApplicationController
     end
   end
 
+
+  def generate_booklet
+    selected_booklet_files =  params[:booklet_hash]
+    result_files           =  BookletGenerator.new(selected_booklet_files).result
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_bookleet

@@ -4,5 +4,6 @@ Rails.application.routes.draw do
   resources :bookleets do
   	resources :tbcs
   end
+  get '/generate_booklet', to: 'bookleets#generate_booklet', as: 'generate_booklet'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

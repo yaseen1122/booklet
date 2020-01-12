@@ -1,1 +1,2 @@
- $(".booklet_tbcs_section").html("<%= j render partial:'tbcs/table_listing', locals: {tbcs: @booklet.tbcs}%>")
+$(".booklet_tbcs_section").html("<%= j render partial:'tbcs/table_listing', locals: {tbcs: @booklet.tbcs}%>")
+$("#tbc-<%= @tbc.id%>-booklet-table").remove()

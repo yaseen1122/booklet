@@ -34,22 +34,24 @@
      <div class="col-md-8 grove-border">
 				<div class="card-body mt-5">
 	        <div class="e-table mt-2">
-	          <div class="table-responsive table-lg mt-3">
-              <% @bookleet.tbcs.each do |bf|%>
-  	            <table class=" hide-table table table-bordered tbc-booklrt-tables" id="tbc-<%= bf.id%>-booklet-table">
-  	              <thead>
-  	                <tr>
-  	                  <th class="max-width">File Name on Case</th>
-  	                  <th>Description in Booklet</th>
-  	                </tr>
-  	              </thead>
-  	              <tbody  id="tbc-<%= bf.id%>-booklet-files">
-  	                <tr >
-  							    </tr>
-  	              </tbody>
-  	            </table>
+            <div class="table-responsive table-lg mt-3 tbc_selected_files_tables">
+              <% if @bookleet.tbcs.any? %>
+                <% @bookleet.tbcs.each do |bf|%>
+    	           <%= render partial: "tbcs/file_selection_table", locals: {bf: bf} %>
+                <% end %>
+              <% else %>
+                <div class="alert alert-info default_instruction_area" role="alert">
+                  <h4 class="alert-heading">Important Notes!</h4>
+                  <p>You have to follow the below mentioned  instructions to generate any booklet.</p>
+                  <ol>
+                    <li>First create Table of Content ,if not any exist.</li>
+                    <li>Select any Table of Content  and select multiple/single file(s) for selected Table of Content and press "Put Into Booklet" button to put all files into selected Table of Content</li>
+                    <li>You can unselect any selected file for Table of Content and put it back to default files list.</li>
+                    <li>Press "Generate Booklet" button to generate the single combined pdf file name as "resut.pdf" for all seleted Table of content files.</li>
+                  </ol>
+                </div>
               <% end %>
-	          </div>
+            </div>
 	        </div>
 	      </div>
       </div>
@@ -86,7 +88,7 @@
               			<% full_file_name = bf.split('/').last %>
               			<% file_name = full_file_name.split('.').first%>
               			<% ext_name  = full_file_name.split('.').last%>
-		                <tr>
+		                <tr data-booklet-file-path="<%= bf%>">
 								      <td class="align-middle">
 								        <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
 								          <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= index%>">
@@ -106,8 +108,9 @@
 		</div>
 		<div class="col-md-2 grove-border ">
 			<button type="button" class="btn btn-primary btn-block mb-3 mt-2" data-current-selected-tbc-table="" id="place-booklet-fl-btn">Put Into Booklet</button>
-			<button type="button" class="btn btn-success btn-block mb-3">Generate Booklet</button>
-			<button type="button" class="btn btn-secondary btn-block ">Exit</button>
+			<button type="button" class="btn btn-success btn-block mb-3" id="generate-booklet" >Generate Booklet</button>
+      <%= link_to "<button type='button' class='btn btn-secondary btn-block'>Exit</button>".html_safe,root_path%> 
+			
 		</div>
 	</div>
 </div>

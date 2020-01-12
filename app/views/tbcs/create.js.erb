@@ -1,4 +1,7 @@
 <% if @tbc.errors.blank?%>
  $("#new-tbc-form-modal").modal("hide")
  $(".booklet_tbcs_section").html("<%= j render partial:'tbcs/table_listing', locals: {tbcs: @booklet.tbcs}%>")
+ $(".tbc_selected_files_tables").append("<%= j render partial: 'tbcs/file_selection_table', locals: {bf: @tbc}%>")
+ $("#tbc-<%= @tbc.id%>").click();
+ $(".default_instruction_area").addClass("hide-table");
 <% end%>
