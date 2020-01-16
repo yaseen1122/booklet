@@ -74,30 +74,30 @@ $(document).ready(function(){
 
 
   $(document).on("click", "#generate-booklet", function(e) {
-    // let checkIfAnyTbcFileSelected = ($(".tbc_selected_files_tables > table tbody tr").length > 0) ? true : false 
+    let checkIfAnyTbcFileSelected = ($(".tbc_selected_files_tables > table tbody tr").length > 0) ? true : false 
 
-    // if (checkIfAnyTbcFileSelected) {
-    //   var bookletletHash = {};
-    //   $(".tbc-booklet-tables").each(function(index) {
-    //     let currentTable = $(this);
-    //     let abc = []
-    //     currentTable.find('tr').each(function (i, el) {
-    //       var $tds = $(this).data('booklet-file-path');
-    //       abc.push($tds);
-    //     });
-    //     bookletletHash[currentTable.data("tbc-id")] = abc
-    //   });
-    //   $.ajax({
-    //     type: "GET",
-    //     url: "/generate_booklet.js",
-    //     data:{booklet_hash: bookletletHash},
-    //     dataType: "script"
-    //   });
-    // }
-    // else{
-    //   alert("Please select some files first for any Table of Content to generate the Booklet.")
-    // }
-    if (confirm('Comming Soon!')) {}
+    if (checkIfAnyTbcFileSelected) {
+      var bookletletHash = {};
+      $(".tbc-booklet-tables").each(function(index) {
+        let currentTable = $(this);
+        let abc = []
+        currentTable.find('tr').each(function (i, el) {
+          var $tds = $(this).data('booklet-file-path');
+          abc.push($tds);
+        });
+        bookletletHash[currentTable.data("tbc-id")] = abc
+      });
+      $.ajax({
+        type: "GET",
+        url: "/generate_booklet.js",
+        data:{booklet_hash: bookletletHash},
+        dataType: "script"
+      });
+    }
+    else{
+      alert("Please select some files first for any Table of Content to generate the Booklet.")
+    }
+    // if (confirm('Comming Soon!')) {}
   });
 
 });

@@ -66,7 +66,19 @@ class BookleetsController < ApplicationController
 
   def generate_booklet
     selected_booklet_files =  params[:booklet_hash]
-    result_files           =  BookletGenerator.new(selected_booklet_files).result
+    @result_files          =  BookletGenerator.new(selected_booklet_files).result
+  end
+
+  def download_booklet
+    # begin
+      @file_name       = params[:file_name]
+      file_destination = "#{Rails.root}/booklet_files/#{@file_name}"
+      send_file file_destination, type: "application/pdf", x_sendfile: true
+    # rescue Exception => e
+    #   flash.now[:errors] = 'Some error occured . File download failed. Please contact to support.'
+    #   redirect_to new_user_url
+    #   redirect_to @bookleet
+    # end
   end
 
   private

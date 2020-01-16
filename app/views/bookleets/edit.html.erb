@@ -95,7 +95,7 @@
 								          <label class="custom-control-label" for="bf-<%= index%>"></label>
 								        </div>
 								      </td>
-								      <td class="text-nowrap align-middle"><%= file_name%></td>
+								      <td class="text-nowrap align-middle"> <%= link_to file_name , downloade_booklet_path(file_name: full_file_name) %></td>
 								      <td class="text-center align-middle"><%= "."+ext_name %></td>
 								    </tr>
 								  <% end %>
