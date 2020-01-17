@@ -7,42 +7,47 @@ class BookletGenerator
   end
 
   def result
+    toc_record     = Hash.new
+    begin
 
-    @selected_booklet_files.each do |k,value|
-      @tbc = Tbc.find(k)
-      pdf_file_paths = value.reject(&:empty?)
-
-
-      # Prawn::Document.generate("#{Rails.root}/booklet_files/#{@tbc.bookleet.name}_#{Time.now.to_i}.pdf", {:page_size => 'A4',:skip_page_creation => true}) do |pdf|
-      #   pdf_file_paths.each do |pdf_file|
-      #     if File.exists?(pdf_file)
-      #       pdf_temp_nb_pages = Prawn::Document.new(:template => pdf_file).page_count
-      #       (1..pdf_temp_nb_pages).each do |tp|
-      #         debugger
-      #         pdf.start_new_page(:template => pdf_file, :template_page => tp)
-      #       end
-      #     end
-      #   end
-      # end
-
-      first_pdf_path = pdf_file_paths.delete_at(0)
-      destination    = "#{Rails.root}/booklet_files/#{@tbc.bookleet.name.downcase}-#{Time.now.strftime("%m-%d-%Y-%H:%M:%S").to_s}.pdf"
-      begin  
+      debugger
+      @selected_booklet_files.each do |k,value|
+        @tbc = Tbc.find(k)
+        pdf_file_paths = value.reject(&:empty?)
+        # Prawn::Document.generate("#{Rails.root}/booklet_files/#{@tbc.bookleet.name}_#{Time.now.to_i}.pdf", {:page_size => 'A4',:skip_page_creation => true}) do |pdf|
+        #   pdf_file_paths.each do |pdf_file|
+        #     if File.exists?(pdf_file)
+        #       pdf_temp_nb_pages = Prawn::Document.new(:template => pdf_file).page_count
+        #       (1..pdf_temp_nb_pages).each do |tp|
+        #         debugger
+        #         pdf.start_new_page(:template => pdf_file, :template_page => tp)
+        #       end
+        #     end
+        #   end
+        # end
+        first_pdf_path = value.reject(&:empty?).delete_at(0)
+        destination    = "#{Rails.root}/booklet_files/#{@tbc.bookleet.name.downcase}-#{Time.now.strftime("%m-%d-%Y-%H:%M:%S").to_s}.pdf"
+        arr_abc = []
+        debugger
         Prawn::Document.generate(destination,{:page_size =>  [595.28, 841.89],:skip_page_creation => true,:template => first_pdf_path}) do |pdf|
           pdf_file_paths.each do |pdf_path|
             pdf.go_to_page(pdf.page_count)
+            file_name_from_path = pdf_path.split("/").last.split(".").first
+            arr_abc.push({file_name_from_path => pdf.page_number })
             template_page_count = Prawn::Document.new(:template => pdf_path).page_count
-            (1..template_page_count).each do |template_page_number|
+            (1..template_page_count).each_with_index do |template_page_number, index|
               pdf.start_new_page(:template => pdf_path, :template_page => template_page_number)
             end
           end
+          toc_record[@tbc.name] = arr_abc
           add_page_numbers(pdf)
         end
-        return "200"
-      rescue Exception => e
-        return "500"
       end
-    end
+      debugger
+    return "200"
+  rescue Exception => e
+    return "500"
+  end
 
     # def count_pdf_pages(pdf_file_path)
     #   pdf = Prawn::Document.new(:template => pdf_file_path)
