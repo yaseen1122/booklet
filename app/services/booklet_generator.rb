@@ -1,19 +1,20 @@
 
 class BookletGenerator
 
-  def initialize(selected_booklet_files)
+  def initialize(selected_booklet_files, bookleet_name)
     @selected_booklet_files = selected_booklet_files
+    @bookleet_name = bookleet_name
     @pdf = CombinePDF.new
   end
 
   def result
     toc_record     = Hash.new
-    begin
-
-      debugger
-      @selected_booklet_files.each do |k,value|
-        @tbc = Tbc.find(k)
-        pdf_file_paths = value.reject(&:empty?)
+    # begin
+      collective_categories = @selected_booklet_files.keys
+      collective_files      = @selected_booklet_files.values.flatten.compact.reject(&:empty?)
+      # collective_files.each_with_index do |cf, index|
+        # @tbc = Tbc.find(k)
+        # pdf_file_paths = value.reject(&:empty?)
         # Prawn::Document.generate("#{Rails.root}/booklet_files/#{@tbc.bookleet.name}_#{Time.now.to_i}.pdf", {:page_size => 'A4',:skip_page_creation => true}) do |pdf|
         #   pdf_file_paths.each do |pdf_file|
         #     if File.exists?(pdf_file)
@@ -25,29 +26,33 @@ class BookletGenerator
         #     end
         #   end
         # end
-        first_pdf_path = value.reject(&:empty?).delete_at(0)
-        destination    = "#{Rails.root}/booklet_files/#{@tbc.bookleet.name.downcase}-#{Time.now.strftime("%m-%d-%Y-%H:%M:%S").to_s}.pdf"
-        arr_abc = []
-        debugger
+        first_pdf_path = collective_files.delete_at(0)
+        destination    = "#{Rails.root}/booklet_files/#{@bookleet_name}.pdf"
+        # arr_abc = []
         Prawn::Document.generate(destination,{:page_size =>  [595.28, 841.89],:skip_page_creation => true,:template => first_pdf_path}) do |pdf|
-          pdf_file_paths.each do |pdf_path|
+          collective_files.each_with_index do |pdf_path,index|
+            if index == 0
+              toc_record[@selected_booklet_files.values.flatten.compact.reject(&:empty?).first] = 1
+            end
             pdf.go_to_page(pdf.page_count)
-            file_name_from_path = pdf_path.split("/").last.split(".").first
-            arr_abc.push({file_name_from_path => pdf.page_number })
+            # file_name_from_path = pdf_path.split("/").last.split(".").first
+            toc_record[pdf_path] = pdf.page_number
+            # arr_abc.push({file_name_from_path => pdf.page_number })
             template_page_count = Prawn::Document.new(:template => pdf_path).page_count
             (1..template_page_count).each_with_index do |template_page_number, index|
               pdf.start_new_page(:template => pdf_path, :template_page => template_page_number)
             end
           end
-          toc_record[@tbc.name] = arr_abc
+          # toc_record[@tbc.name] = arr_abc
           add_page_numbers(pdf)
+          sanytize_toc_patrams @selected_booklet_files, toc_record , pdf
+
         end
-      end
-      debugger
+      # end
     return "200"
-  rescue Exception => e
-    return "500"
-  end
+  # rescue Exception => e
+  #   return "500"
+  # end
 
     # def count_pdf_pages(pdf_file_path)
     #   pdf = Prawn::Document.new(:template => pdf_file_path)
@@ -133,6 +138,44 @@ class BookletGenerator
   #     pdf.text "The content for this section spans 2 pages"
   #   end
   # end
+
+  def sanytize_toc_patrams files_with_cat, toc_record, pdf
+    pdf.go_to_page(0)
+    pdf.start_new_page
+    index_val = 0 
+    pdf.text "Table of Contents", size: 38, style: :bold
+    files_with_cat.each do |k, value|
+      @tbc = Tbc.find(k)
+      pdf.text "#{ (index_val+1).to_s+ "."+ @tbc.name}", size: 20, style: :bold
+      pdf_file_paths = value.reject(&:empty?)
+      pdf_file_paths.each do |pdf_file|
+        pdf_file_number = toc_record.select{|k,value| k == pdf_file}.present? ? toc_record.select{|k,value| k == pdf_file}.values.try(:last) : ""
+        pdf.text "#{"       " + pdf_file.split("/").last.split(".").first.to_s + "..................." + pdf_file_number.to_s}", size: 12, style: :bold
+        # build_toc_entry(pdf_file.split("/").last.split(".").first.to_s, '3', 350, 8)
+      end
+    end
+  end 
+
+  # def build_toc_entry(left_text, right_text, available_width, text_size)
+  #   space_for_dots = 2
+  #   dots = '.' * (space_for_dots/ 4)
+  #   font = Rails.root.join("app/assets/fonts/OpenSans-Regular-webfont.ttf")
+  #   # toc_entry = entry_string + dots + entry_page_number
+  #   current_font = font.inspect.split('<')[1].split(':')[0].strip
+
+  #   debugger
+
+  #   # left_text_width = font(current_font).compute_width_of(left_text, size: text_size)
+  #   # right_text_width = font(current_font).compute_width_of(right_text, size: text_size)
+  #   # dot_width = font(current_font).compute_width_of('.', size: text_size)
+  #   # space_width = font(current_font).compute_width_of(' ', size: text_size)
+  #   # space_for_dots = available_width - left_text_width - right_text_width - space_width * 2
+  #   # dots = '.' * (2/ dot_width)
+  #   "#{left_text} #{dots} #{right_text}" # return the finished toc entry
+  # end
+
+
+
 
   def add_page_numbers(pdf)
     page_number_string = 'Booklet Page No.: <page> of <total>'

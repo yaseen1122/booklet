@@ -78,6 +78,8 @@ $(document).ready(function(){
 
     if (checkIfAnyTbcFileSelected) {
       var bookletletHash = {};
+      var bookletName  = $(".main-edit-booklet-area").data("booklet_name")
+
       $(".tbc-booklet-tables").each(function(index) {
         let currentTable = $(this);
         let abc = []
@@ -87,11 +89,19 @@ $(document).ready(function(){
         });
         bookletletHash[currentTable.data("tbc-id")] = abc
       });
+      $('#loading').show();
       $.ajax({
         type: "GET",
         url: "/generate_booklet.js",
-        data:{booklet_hash: bookletletHash},
-        dataType: "script"
+        data:{booklet_hash: bookletletHash, booklet_name: bookletName },
+        dataType: "script",
+        success: function (data) {
+          $('#loading').hide();
+        },
+        failure: function (data) {
+          $('#loading').hide();
+          
+        }
       });
     }
     else{

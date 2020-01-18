@@ -1,9 +1,12 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div id="loading" style="display: none;">
+  <%= image_tag "loader.gif", alt: "Loading...", id: "loading-image"%>
+</div>
 <div  class="text-center mb-5"></div>
 <%#= render 'form', bookleet: @bookleet %>
 <%#= link_to 'Show', @bookleet %> 
 <%#= link_to 'Back', bookleets_path %>
-<div class="container">
+<div class="container  main-edit-booklet-area" data-booklet_name="<%= @bookleet.name%>">
   <div class="row flex-lg-nowrap">
   	<div class="col-md-4 grove-border">
           <div class="card-body">

@@ -66,7 +66,8 @@ class BookleetsController < ApplicationController
 
   def generate_booklet
     selected_booklet_files =  params[:booklet_hash]
-    @result_files          =  BookletGenerator.new(selected_booklet_files).result
+    @bookleet_name         =  params[:booklet_name]
+    @result_files          =  BookletGenerator.new(selected_booklet_files,@bookleet_name).result
   end
 
   def download_booklet
