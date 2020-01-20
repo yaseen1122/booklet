@@ -36,7 +36,7 @@ class BookletGenerator
             end
             pdf.go_to_page(pdf.page_count)
             # file_name_from_path = pdf_path.split("/").last.split(".").first
-            toc_record[pdf_path] = pdf.page_number
+            toc_record[pdf_path] = (pdf.page_number.to_i + 1)
             # arr_abc.push({file_name_from_path => pdf.page_number })
             template_page_count = Prawn::Document.new(:template => pdf_path).page_count
             (1..template_page_count).each_with_index do |template_page_number, index|
@@ -143,14 +143,21 @@ class BookletGenerator
     pdf.go_to_page(0)
     pdf.start_new_page
     index_val = 0 
-    pdf.text "Table of Contents", size: 38, style: :bold
+    pdf.text "<u>TABLE OF CONTENTS</u>", size: 24,:style => :bold, :align => :center, :inline_format => true
+
     files_with_cat.each do |k, value|
       @tbc = Tbc.find(k)
-      pdf.text "#{ (index_val+1).to_s+ "."+ @tbc.name}", size: 20, style: :bold
+      index_val+= 1
+      pdf.text "#{ (index_val).to_s+ "."+ @tbc.name}", size: 16, style: :bold
+      pdf.text "\n"
       pdf_file_paths = value.reject(&:empty?)
       pdf_file_paths.each do |pdf_file|
         pdf_file_number = toc_record.select{|k,value| k == pdf_file}.present? ? toc_record.select{|k,value| k == pdf_file}.values.try(:last) : ""
-        pdf.text "#{"       " + pdf_file.split("/").last.split(".").first.to_s + "..................." + pdf_file_number.to_s}", size: 12, style: :bold
+        pdf.indent 30, 0 do
+          dots = 100 - pdf_file.split("/").last.split(".").first.length 
+          pdf.text "#{pdf_file.split("/").last.split(".").first.to_s + ("." * dots) + pdf_file_number.to_s}", size: 12
+          pdf.text "\n"
+        end
         # build_toc_entry(pdf_file.split("/").last.split(".").first.to_s, '3', 350, 8)
       end
     end
