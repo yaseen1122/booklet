@@ -37,21 +37,17 @@ class BookletGenerator
             end
 
             pdf.go_to_page(pdf.page_count)
-            # file_name_from_path = pdf_path.split("/").last.split(".").first
             toc_record[pdf_path] = (pdf.page_number.to_i + 1)
-            # arr_abc.push({file_name_from_path => pdf.page_number })
             template_page_count = Prawn::Document.new(:template => pdf_path).page_count
 
             (1..template_page_count).each_with_index do |template_page_number, index|
               pdf.start_new_page(:template => pdf_path, :template_page => template_page_number)
             end
           end
-          # toc_record[@tbc.name] = arr_abc
           add_page_numbers(pdf)
           sanytize_toc_patrams @selected_booklet_files, toc_record , pdf
           delete_all_convertable_files
         end
-      # end
       return "200"
     rescue Exception => e
       return "500"
@@ -75,6 +71,7 @@ class BookletGenerator
   end
 
   def sanytize_toc_patrams files_with_cat, toc_record, pdf
+
     pdf.go_to_page(0)
     pdf.start_new_page
     index_val = 0 
@@ -87,6 +84,13 @@ class BookletGenerator
       pdf.text "\n"
       pdf_file_paths = value.reject(&:empty?)
       pdf_file_paths.each do |pdf_file|
+
+        if CONVERTABLE_FILES_EXT.include?(get_file_ext_from_path(pdf_file)) 
+          firt_part  = pdf_file.split("/")[0..-3].join('/')
+          second_part = "/booklet_converted_files/" + pdf_file.split("/").last.split(".").first.split('.').first + ".pdf"
+          pdf_file = firt_part + second_part
+        end
+
         pdf_file_number = toc_record.select{|k,value| k == pdf_file}.present? ? toc_record.select{|k,value| k == pdf_file}.values.try(:last) : ""
         pdf.indent 30, 0 do
           dots = 100 - pdf_file.split("/").last.split(".").first.length 
