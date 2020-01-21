@@ -12,7 +12,7 @@ class BookletGenerator
 
   def result
     toc_record     = Hash.new
-    # begin
+    begin
       collective_categories = @selected_booklet_files.keys
       collective_files      = @selected_booklet_files.values.flatten.compact.reject(&:empty?)
 
@@ -49,9 +49,9 @@ class BookletGenerator
           delete_all_convertable_files
         end
       return "200"
-    # rescue Exception => e
-    #   return "500"
-    # end
+    rescue Exception => e
+      return "500"
+    end
   end
 
   def get_file_ext_from_path(file_path)
