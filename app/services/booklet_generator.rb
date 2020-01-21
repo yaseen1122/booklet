@@ -1,5 +1,8 @@
 
+require 'RMagick'
 class BookletGenerator
+
+  include Magick
 
   def initialize(selected_booklet_files, bookleet_name)
     @selected_booklet_files = selected_booklet_files
@@ -26,8 +29,14 @@ class BookletGenerator
         #     end
         #   end
         # end
+
         first_pdf_path = collective_files.delete_at(0)
+        # image = Image.read(first_pdf_path).first
+        debugger
+        
         destination    = "#{Rails.root}/booklet_files/#{@bookleet_name}.pdf"
+
+
         # arr_abc = []
         Prawn::Document.generate(destination,{:page_size =>  [595.28, 841.89],:skip_page_creation => true,:template => first_pdf_path}) do |pdf|
           collective_files.each_with_index do |pdf_path,index|
@@ -138,6 +147,11 @@ class BookletGenerator
   #     pdf.text "The content for this section spans 2 pages"
   #   end
   # end
+
+
+  def convert_tiff_to_pdf(file_path)
+
+  end
 
   def sanytize_toc_patrams files_with_cat, toc_record, pdf
     pdf.go_to_page(0)
