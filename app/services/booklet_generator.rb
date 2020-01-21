@@ -46,7 +46,7 @@ class BookletGenerator
           end
           add_page_numbers(pdf)
           sanytize_toc_patrams @selected_booklet_files, toc_record , pdf
-          delete_all_convertable_files
+          # delete_all_convertable_files
         end
       return "200"
     # rescue Exception => e
