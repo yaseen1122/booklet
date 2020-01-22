@@ -39,8 +39,10 @@ body{
 }
 
 #loading-image {
+  float: none;
   position: absolute;
   top: 100px;
-  left: 240px;
+  left: 468px;
   z-index: 100;
+  height: 250px;
 }
