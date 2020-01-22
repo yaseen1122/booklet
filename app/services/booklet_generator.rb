@@ -20,6 +20,7 @@ class BookletGenerator
 
         if  CONVERTABLE_FILES_EXT.include?(get_file_ext_from_path(first_pdf_path)) 
           first_pdf_path = convert_tiff_to_pdf(first_pdf_path)
+          toc_record[first_pdf_path] = 1
         end
 
         destination    = "#{Rails.root}/booklet_files/#{@bookleet_name}.pdf"
@@ -70,7 +71,7 @@ class BookletGenerator
     end
   end
 
-  
+
 
   def sanytize_toc_patrams files_with_cat, toc_record, pdf
 
@@ -86,13 +87,11 @@ class BookletGenerator
       pdf.text "\n"
       pdf_file_paths = value.reject(&:empty?)
       pdf_file_paths.each do |pdf_file|
-
         if CONVERTABLE_FILES_EXT.include?(get_file_ext_from_path(pdf_file)) 
           firt_part  = pdf_file.split("/")[0..-3].join('/')
           second_part = "/booklet_converted_files/" + pdf_file.split("/").last.split(".").first.split('.').first + ".pdf"
           pdf_file = firt_part + second_part
         end
-
         pdf_file_number = toc_record.select{|k,value| k == pdf_file}.present? ? toc_record.select{|k,value| k == pdf_file}.values.try(:last) : ""
         pdf.indent 30, 0 do
           dots = 100 - pdf_file.split("/").last.split(".").first.length 
