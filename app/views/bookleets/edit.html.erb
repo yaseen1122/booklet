@@ -9,30 +9,29 @@
 <div class="container  main-edit-booklet-area" data-booklet_name="<%= @bookleet.name%>">
   <div class="row flex-lg-nowrap">
   	<div class="col-md-4 grove-border">
-          <div class="card-body">
-            <div class="card-title">
-              <h6 class="mr-2"><span>Table of Contents for Booklet</span></h6>
-              <button id="add-tbc-btn" class="btn btn-sm btn-outline-success pull-right mb-3" type="button"><i class="fa fa-plus"></i></button>
-            </div>
-            <div class="e-table">
-              <div class="table-responsive table-lg mt-3">
-                <table class="table table-bordered tbc-selection-list-tb">
-                  <thead>
-                    <tr>
-                      <th class="align-top">
-                      </th>
-                      <th class="max-width">Name</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody class="booklet_tbcs_section">
-                    <%= render partial:'tbcs/table_listing', locals: {tbcs: @bookleet.tbcs}%>
-                  </tbody>
-                </table>
-              </div>
-             
+        <div class="card-body">
+          <div class="card-title">
+            <h6 class="mr-2"><span>Table of Contents for Booklet</span></h6>
+            <button id="add-tbc-btn" class="btn btn-sm btn-outline-success pull-right mb-3" type="button"><i class="fa fa-plus"></i></button>
+          </div>
+          <div class="e-table">
+            <div class="table-responsive table-lg mt-3">
+              <table class="table table-bordered tbc-selection-list-tb">
+                <thead>
+                  <tr>
+                    <th class="align-top">
+                    </th>
+                    <th class="max-width">Name</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="booklet_tbcs_section">
+                  <%= render partial:'tbcs/table_listing', locals: {tbcs: @bookleet.tbcs}%>
+                </tbody>
+              </table>
             </div>
           </div>
+        </div>
       </div>
      <div class="col-md-8 grove-border">
 				<div class="card-body mt-5">
@@ -40,7 +39,7 @@
             <div class="table-responsive table-lg mt-3 tbc_selected_files_tables">
               <% if @bookleet.tbcs.any? %>
                 <% @bookleet.tbcs.each do |bf|%>
-    	           <%= render partial: "tbcs/file_selection_table", locals: {bf: bf} %>
+    	           <%= render partial: "tbcs/file_selection_table", locals: {bf: bf,bookleet_selected_files: @bookleet.selected_files} %>
                 <% end %>
               <% else %>
                 <div class="alert alert-info default_instruction_area" role="alert">
@@ -84,25 +83,27 @@
                   <th>File Type</th>
                 </tr>
               </thead>
-              <tbody class="">
+              <tbody>
               	<% booklet_files = Dir.glob("#{Rails.root}/booklet_files/**/*")%>
-              	<% if booklet_files.any? %>
-              		<%  booklet_files.each_with_index do |bf,index| %>
-              			<% full_file_name = bf.split('/').last %>
-              			<% file_name = full_file_name.split('.').first%>
-              			<% ext_name  = full_file_name.split('.').last%>
-		                <tr data-booklet-file-path="<%= bf%>">
-								      <td class="align-middle">
-								        <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-								          <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= index%>">
-								          <label class="custom-control-label" for="bf-<%= index%>"></label>
-								        </div>
-								      </td>
-								      <td class="text-nowrap align-middle"> <%= link_to file_name , downloade_booklet_path(file_name: full_file_name) %></td>
-								      <td class="text-center align-middle"><%= "."+ext_name %></td>
-								    </tr>
-								  <% end %>
-							  <% end %>
+                <% if @bookleet.selected_files.present?%>
+                  <% selected_files_path = @bookleet.selected_files.values.flatten.compact.reject(&:empty?)%>
+                  <%  booklet_files = booklet_files.select { |elem| !selected_files_path.include?(elem) } %>
+                <% end %>
+                <%  booklet_files.each_with_index do |bf,index| %>
+                  <% full_file_name = bf.split('/').last %>
+                  <% file_name = full_file_name.split('.').first%>
+                  <% ext_name  = full_file_name.split('.').last%>
+                  <tr data-booklet-file-path="<%= bf%>">
+                    <td class="align-middle">
+                      <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
+                        <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= index%>">
+                        <label class="custom-control-label" for="bf-<%= index%>"></label>
+                      </div>
+                    </td>
+                    <td class="text-nowrap align-middle"> <%= link_to file_name , downloade_booklet_path(file_name: full_file_name) %></td>
+                    <td class="text-center align-middle"><%= "."+ext_name %></td>
+                  </tr>
+                <% end %>
               </tbody>
             </table>
           </div>

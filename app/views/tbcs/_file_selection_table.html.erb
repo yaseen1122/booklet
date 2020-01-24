@@ -7,5 +7,9 @@
     </tr>
   </thead>
   <tbody  id="tbc-<%= bf.id%>-booklet-files">
+  	<% selected_cat_files = bookleet_selected_files.present? ? bookleet_selected_files[bf.id.to_s] : [] %>
+  	<% if selected_cat_files.present? %>
+  		<%= render partial: 'bookleets/predefined_booklets', locals: {booklet_files: selected_cat_files.compact.reject(&:empty?)}%>
+  	<% end %>
   </tbody>
 </table>

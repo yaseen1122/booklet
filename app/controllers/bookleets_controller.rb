@@ -68,6 +68,13 @@ class BookleetsController < ApplicationController
     selected_booklet_files =  params[:booklet_hash]
     @bookleet_name         =  params[:booklet_name]
     @result_files          =  BookletGenerator.new(selected_booklet_files,@bookleet_name).result
+    @booklet               = Bookleet.where(name:  @bookleet_name).last
+    save_selected_files(@booklet, selected_booklet_files) if  (@booklet.present? && @result_files == "200")
+  end
+
+
+  def save_selected_files(bookleet,selected_files)
+    bookleet.update(selected_files: selected_files.as_json)
   end
 
   def download_booklet
