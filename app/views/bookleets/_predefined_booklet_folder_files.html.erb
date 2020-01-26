@@ -1,0 +1,19 @@
+<% if bookleet_selected_files.present?%>
+  <% selected_files_path = bookleet_selected_files.values.flatten.compact.reject(&:empty?)%>
+  <%  booklet_files = booklet_files.select { |elem| !selected_files_path.include?(elem) } %>
+<% end %>
+<%  booklet_files.each_with_index do |bf,index| %>
+  <% full_file_name = bf.split('/').last %>
+  <% file_name = full_file_name.split('.').first%>
+  <% ext_name  = full_file_name.split('.').last%>
+  <tr data-booklet-file-path="<%= bf%>">
+    <td class="align-middle">
+      <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
+        <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= index%>">
+        <label class="custom-control-label" for="bf-<%= index%>"></label>
+      </div>
+    </td>
+    <td class="text-nowrap align-middle"> <%= link_to file_name , downloade_booklet_path(file_name: full_file_name) %></td>
+    <td class="text-center align-middle"><%= "."+ext_name %></td>
+  </tr>
+<% end %>

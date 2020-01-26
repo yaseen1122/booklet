@@ -28,6 +28,8 @@ gem 'prawn', '~> 2.2'
 gem 'prawn-templates', '~> 0.1.1'
 gem "mini_magick", "~> 3.4"
 gem 'rmagick', '~> 2.14'
+gem "paperclip", "~> 6.0.0"
+
 # gem 'rmagick', '~> 2.15.2'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

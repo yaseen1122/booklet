@@ -6,7 +6,7 @@
 <%#= render 'form', bookleet: @bookleet %>
 <%#= link_to 'Show', @bookleet %> 
 <%#= link_to 'Back', bookleets_path %>
-<div class="container  main-edit-booklet-area" data-booklet_name="<%= @bookleet.name%>">
+<div class="container  main-edit-booklet-area" data-booklet_name="<%= @bookleet.name%>" data-booklet_id="<%= @bookleet.id%>" >
   <div class="row flex-lg-nowrap">
   	<div class="col-md-4 grove-border">
         <div class="card-body">
@@ -65,8 +65,13 @@
 	<div class="row ">
 		<div class="col-md-10 grove-border">
 			<div class="card-body">
-        <div class="card-title">
-          <h6 class="mr-2"><span>List of Files in the Folder -- '/booklet_files'</span></h6>
+        <div class="card-title ">
+          <h6 class=" main-booklet-area mr-2"><span>List of Files in the Folder -- '/booklet_files'</span></h6>
+          <div class="btn-toolbar" style="float: right">
+            <button type="button" class="btn btn-success" id="upload-booklet" >Upload Booklet(s)</button>
+            &nbsp; &nbsp; &nbsp;
+            <button type="button" class="btn btn-danger"  id="delete-booklet" >Delete Booklet(s)</button>
+          </div>
         </div>
         <div class="e-table">
           <div class="table-responsive table-lg mt-3">
@@ -83,27 +88,9 @@
                   <th>File Type</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="predefined_booklet_files_area" >
               	<% booklet_files = Dir.glob("#{Rails.root}/booklet_files/**/*")%>
-                <% if @bookleet.selected_files.present?%>
-                  <% selected_files_path = @bookleet.selected_files.values.flatten.compact.reject(&:empty?)%>
-                  <%  booklet_files = booklet_files.select { |elem| !selected_files_path.include?(elem) } %>
-                <% end %>
-                <%  booklet_files.each_with_index do |bf,index| %>
-                  <% full_file_name = bf.split('/').last %>
-                  <% file_name = full_file_name.split('.').first%>
-                  <% ext_name  = full_file_name.split('.').last%>
-                  <tr data-booklet-file-path="<%= bf%>">
-                    <td class="align-middle">
-                      <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-                        <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= index%>">
-                        <label class="custom-control-label" for="bf-<%= index%>"></label>
-                      </div>
-                    </td>
-                    <td class="text-nowrap align-middle"> <%= link_to file_name , downloade_booklet_path(file_name: full_file_name) %></td>
-                    <td class="text-center align-middle"><%= "."+ext_name %></td>
-                  </tr>
-                <% end %>
+                <%= render partial: "bookleets/predefined_booklet_folder_files", locals: {booklet_files: booklet_files, bookleet_selected_files: @bookleet.selected_files} %>
               </tbody>
             </table>
           </div>
@@ -119,6 +106,7 @@
 	</div>
 </div>
 <%= render partial: "tbcs/new_modal_form", locals: {booklet: @bookleet}%>
+<%= render partial: "bookleets/upload_booklets"%>
 <style type="text/css">
 
 </style>

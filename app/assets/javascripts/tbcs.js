@@ -29,6 +29,7 @@ $(document).ready(function(){
 
   $(document).on("change", "input.tbcs-file-check-box", function(e) {
     var $this = $(this);
+
     if ($this.hasClass("booklet-selected") && $this.closest("table").hasClass("tbc-booklet-tables")){
 
       if (confirm('Are you sure you want to unselect this file from booklet.?')) {
@@ -107,7 +108,43 @@ $(document).ready(function(){
     else{
       alert("Please select some files first for any Table of Content to generate the Booklet.")
     }
-    // if (confirm('Comming Soon!')) {}
+  });
+
+  $(document).on("click", "#upload-booklet", function(e) {
+    $("#booklet-upload-form-modal").modal("show")
+  });
+
+  $(document).on("click", "#upload_booklets_btn", function(e) {
+    $("#booklet-upload-form-modal").modal("hide")
+    $('#loading').show();
+  });
+
+  $(document).on("click", "#delete-booklet", function(e) {
+    let $tableHighlightedRows = $("table.tbc-selected-files-tb tr.highlight");
+    let currentBookletId = $('.main-edit-booklet-area').data('booklet_id')
+    var selected_deleted_files = []
+    if ($tableHighlightedRows.length > 0 ){
+      for (i = 0; i < $tableHighlightedRows.length; i++) {
+        selected_deleted_files.push($tableHighlightedRows[i].dataset["bookletFilePath"])
+      }
+      $('#loading').show();
+      $.ajax({
+        type: "GET",
+        url: "/delete_booklets.js",
+        data:{delete_selected_files: selected_deleted_files, id: currentBookletId},
+        dataType: "script",
+        success: function (data) {
+          $('#loading').hide();
+        },
+        failure: function (data) {
+          $('#loading').hide();
+        }
+      });
+
+    }else {
+      alert("Please select the files first which you want to be deleted.")
+    }
+
   });
 
 });

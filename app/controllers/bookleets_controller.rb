@@ -1,5 +1,5 @@
 class BookleetsController < ApplicationController
-  before_action :set_bookleet, only: [:show, :edit, :update, :destroy]
+  before_action :set_bookleet, only: [:show, :edit, :update, :destroy,:upload_booklets,:delete_booklets]
 
   # GET /bookleets
   # GET /bookleets.json
@@ -88,6 +88,40 @@ class BookleetsController < ApplicationController
     #   redirect_to @bookleet
     # end
   end
+
+
+  def upload_booklets
+    begin
+      (params[:files] || []).each do |uploaded_io|
+      # Moving the file to some safe place; as tmp files will be flushed timely
+        File.open(Rails.root.join('booklet_files', uploaded_io.original_filename), 'wb') do |file|
+          file.write(uploaded_io.read)
+        end
+      end
+      @booklet_files = Dir.glob("#{Rails.root}/booklet_files/**/*")
+      @bookleet_selected_files = @bookleet.selected_files
+      return @result = "200"
+    rescue Exception => e
+      return @result = "500"
+    end
+  end
+
+  def delete_booklets
+    begin
+      delete_selected_files = params[:delete_selected_files]
+      if delete_selected_files.present?
+        delete_selected_files.each do |dsf|
+          File.delete(dsf) if File.exist?(dsf)
+        end
+      end
+      @booklet_files = Dir.glob("#{Rails.root}/booklet_files/**/*")
+      @bookleet_selected_files = @bookleet.selected_files
+      return @result = "200"
+    rescue Exception => e
+      return @result = "500"
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,0 +1,9 @@
+<% if @result == "200" %>
+	$("#predefined_booklet_files_area").html("<%= j render partial: 'bookleets/predefined_booklet_folder_files', locals: {booklet_files: @booklet_files, bookleet_selected_files: @bookleet_selected_files} %>")
+	$("#booklet-upload-form-modal").modal("hide")
+	$('#loading').hide();
+<% else %>
+	alert("Some error occured. Please make sure that , Any from the selected files are not corrupted.Please try again with same files or Contact to support. Thanks")
+<% end %>
+
+
