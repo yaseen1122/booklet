@@ -10,7 +10,7 @@
       <div class="modal-body">
         <div class="py-1">
           <%= form_tag({action: :upload_booklets}, multipart: true, remote: true) do %>
-            <%= file_field_tag :ifiles, :multiple => true, name: 'files[]', :id => 'fileinput'%>
+            <%= file_field_tag :ifiles, :multiple => true, name: 'files[]', :id => 'booklets-input', required: true%>
             <%= hidden_field_tag "id", @bookleet.id %>
             <div class="row">
               <div class="col d-flex justify-content-end">

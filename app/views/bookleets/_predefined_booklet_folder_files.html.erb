@@ -9,8 +9,8 @@
   <tr data-booklet-file-path="<%= bf%>">
     <td class="align-middle">
       <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-        <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= index%>">
-        <label class="custom-control-label" for="bf-<%= index%>"></label>
+        <input type="checkbox" class="custom-control-input tbcs-file-check-box" id="bf-<%= full_file_name.downcase%>">
+        <label class="custom-control-label" for="bf-<%= full_file_name.downcase%>"></label>
       </div>
     </td>
     <td class="text-nowrap align-middle"> <%= link_to file_name , downloade_booklet_path(file_name: full_file_name) %></td>
