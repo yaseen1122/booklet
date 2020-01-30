@@ -46,7 +46,7 @@ class BookletGenerator
             end
           end
           add_page_numbers(pdf)
-          sanytize_toc_patrams @selected_booklet_files, toc_record , pdf
+          table_of_content @selected_booklet_files, toc_record , pdf
           delete_all_convertable_files
         end
       return "200"
@@ -73,17 +73,17 @@ class BookletGenerator
 
 
 
-  def sanytize_toc_patrams files_with_cat, toc_record, pdf
+  def table_of_content files_with_cat, toc_record, pdf
 
     pdf.go_to_page(0)
     pdf.start_new_page
     index_val = 0 
-    pdf.text "<u>TABLE OF CONTENTS</u>", size: 24,:style => :bold, :align => :center, :inline_format => true
+    pdf.text "<u>TABLE OF CONTENTS</u>", size: 24,:style => :bold, :align => :center, :inline_format => true, :color => "000000"
 
     files_with_cat.each do |k, value|
       @tbc = Tbc.find(k)
       index_val+= 1
-      pdf.text "#{ (index_val).to_s+ "."+ @tbc.name}", size: 16, style: :bold
+      pdf.text "#{ (index_val).to_s+ "."+ @tbc.name}", size: 16, style: :bold, :color => "000000"
       pdf.text "\n"
       pdf_file_paths = value.reject(&:empty?)
       pdf_file_paths.each do |pdf_file|
@@ -95,7 +95,7 @@ class BookletGenerator
         pdf_file_number = toc_record.select{|k,value| k == pdf_file}.present? ? toc_record.select{|k,value| k == pdf_file}.values.try(:last) : ""
         pdf.indent 30, 0 do
           dots = 100 - pdf_file.split("/").last.split(".").first.length 
-          pdf.text "#{pdf_file.split("/").last.split(".").first.to_s + ("." * dots) + pdf_file_number.to_s}", size: 12
+          pdf.text "#{pdf_file.split("/").last.split(".").first.to_s + ("." * dots) + pdf_file_number.to_s}", size: 12, :color => "000000"
           pdf.text "\n"
         end
       end
@@ -110,12 +110,13 @@ class BookletGenerator
   def add_page_numbers(pdf)
     page_number_string = 'Booklet Page No.: <page> of <total>'
     options = {
-      at: [pdf.bounds.right - 175, 9], 
+      at:  [pdf.bounds.right - 175, pdf.bounds.bottom + 25],
       width: 150, 
-      align: :center, 
+      align: :right, 
       size: 10,
       page_filter: lambda { |pg| pg }, 
       start_count_at: 1,
+      color: 'FF0000'
     }
     pdf.number_pages(page_number_string, options)
   end

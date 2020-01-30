@@ -33,8 +33,28 @@ $(document).ready(function(){
     if ($this.hasClass("booklet-selected") && $this.closest("table").hasClass("tbc-booklet-tables")){
 
       if (confirm('Are you sure you want to unselect this file from booklet.?')) {
-          $this.closest("tr").removeClass("highlight");
-          $(".tbc-selected-files-tb").append($this.closest("tr"));
+
+        let selectedFilePath = $this.closest("tr").data("booklet-file-path")  
+        let bookletId  = $(".main-edit-booklet-area").data("booklet_id")
+        let currentSelectedTbcTableId = $("#place-booklet-fl-btn").data("current-selected-tbc-table");
+
+        $this.closest("tr").removeClass("highlight");
+        $(".tbc-selected-files-tb").append($this.closest("tr"));
+        $('#loading').show();
+        
+        $.ajax({
+          type: "GET",
+          url: "/delete_selected_file.js",
+          data:{current_selected_tbc_id: currentSelectedTbcTableId , delete_selected_file_path: selectedFilePath, booklet_id: bookletId  },
+          dataType: "script",
+          success: function (data) {
+            $('#loading').hide();
+          },
+          failure: function (data) {
+            $('#loading').hide();
+          }
+        });
+
       } else {
         $this.prop('checked', true);
       }

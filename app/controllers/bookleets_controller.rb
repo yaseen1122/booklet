@@ -122,6 +122,20 @@ class BookleetsController < ApplicationController
     end
   end
 
+  def delete_selected_file
+    begin
+      delete_selected_file_path = params[:delete_selected_file_path]
+      current_tb_id = params[:current_selected_tbc_id].split('-').last
+      @bookleet   = Bookleet.find(params[:booklet_id])
+      @bookleet.selected_files[current_tb_id].delete(delete_selected_file_path)
+      @bookleet.save!
+      return @result = "200"
+    rescue Exception => e
+      return @result = "500"
+    end
+
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
