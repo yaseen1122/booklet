@@ -15,40 +15,37 @@ class BookletGenerator
     begin
       collective_categories = @selected_booklet_files.keys
       collective_files      = @selected_booklet_files.values.flatten.compact.reject(&:empty?)
+      first_pdf_path = collective_files.delete_at(0)
+      if  CONVERTABLE_FILES_EXT.include?(get_file_ext_from_path(first_pdf_path)) 
+        first_pdf_path = convert_tiff_to_pdf(first_pdf_path)
+      end
+      toc_record[first_pdf_path] = 1
+      destination    = "#{Rails.root}/booklet_files/#{@bookleet_name}.pdf"
 
-        first_pdf_path = collective_files.delete_at(0)
+      Prawn::Document.generate(destination,{:page_size =>  [595.28, 841.89],:skip_page_creation => true,:template => first_pdf_path}) do |pdf|
 
-        if  CONVERTABLE_FILES_EXT.include?(get_file_ext_from_path(first_pdf_path)) 
-          first_pdf_path = convert_tiff_to_pdf(first_pdf_path)
-          toc_record[first_pdf_path] = 1
-        end
+        collective_files.each_with_index do |pdf_path,index|
 
-        destination    = "#{Rails.root}/booklet_files/#{@bookleet_name}.pdf"
-
-        Prawn::Document.generate(destination,{:page_size =>  [595.28, 841.89],:skip_page_creation => true,:template => first_pdf_path}) do |pdf|
-
-          collective_files.each_with_index do |pdf_path,index|
-
-            if  CONVERTABLE_FILES_EXT.include?(get_file_ext_from_path(pdf_path)) 
-              pdf_path = convert_tiff_to_pdf(pdf_path)
-            end
-
-            if index == 0
-              toc_record[@selected_booklet_files.values.flatten.compact.reject(&:empty?).first] = 1
-            end
-
-            pdf.go_to_page(pdf.page_count)
-            toc_record[pdf_path] = (pdf.page_number.to_i + 1)
-            template_page_count = Prawn::Document.new(:template => pdf_path).page_count
-
-            (1..template_page_count).each_with_index do |template_page_number, index|
-              pdf.start_new_page(:template => pdf_path, :template_page => template_page_number)
-            end
+          if  CONVERTABLE_FILES_EXT.include?(get_file_ext_from_path(pdf_path)) 
+            pdf_path = convert_tiff_to_pdf(pdf_path)
           end
-          add_page_numbers(pdf)
-          table_of_content @selected_booklet_files, toc_record , pdf
-          delete_all_convertable_files
+
+          if index == 0
+            toc_record[@selected_booklet_files.values.flatten.compact.reject(&:empty?).first] = 1
+          end
+
+          pdf.go_to_page(pdf.page_count)
+          toc_record[pdf_path] = (pdf.page_number.to_i + 1)
+          template_page_count = Prawn::Document.new(:template => pdf_path).page_count
+
+          (1..template_page_count).each_with_index do |template_page_number, index|
+            pdf.start_new_page(:template => pdf_path, :template_page => template_page_number)
+          end
         end
+        add_page_numbers(pdf)
+        table_of_content @selected_booklet_files, toc_record , pdf
+        delete_all_convertable_files
+      end
       return "200"
     rescue Exception => e
       return "500"
