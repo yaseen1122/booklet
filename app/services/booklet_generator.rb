@@ -107,7 +107,7 @@ class BookletGenerator
   def add_page_numbers(pdf)
     page_number_string = 'Booklet Page No.: <page> of <total>'
     options = {
-      at:  [pdf.bounds.right - 175, pdf.bounds.bottom + 25],
+      at:  [pdf.bounds.right - 175, pdf.bounds.bottom + -15],
       width: 150, 
       align: :right, 
       size: 10,
